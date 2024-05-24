@@ -1,8 +1,6 @@
 <?php
-    // Connexion à la base de données (Veuillez ne pas lire les informations de la ligne suivante relatives à cette connexion pour des raisons de sécurité)
+    // Veuillez ne pas lire les informations de la ligne suivante relatives à la connexion à la base de données pour des raisons de sécurité)
     $connexion = new mysqli("localhost", "tvidal", "Marioetsonic1975!", "tvidal_vidaletfils");
-
-    // Vérifier la connexion
     if ($connexion->connect_error) {
         die("Échec de la connexion : " . $connexion->connect_error);
     }
@@ -15,12 +13,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="img/logo.PNG" />
+    <link rel="icon" href="img/icone.png" />
 </head>
 <body>
     <header> 
         <nav>
-         <a href="index.php"><img src="img/logo.PNG" alt="Logo" class="logo"></a>
+         <a href="index.php"><img src="img/logo.png" alt="Accueil" class="logo"></a>
          <a href="mentions_legales.html" class="infos">À propos</a>
          <a href="profil.php"><img src="img/profile.png" alt="Profil" class="profile"></a>
         </nav>
@@ -31,24 +29,18 @@
     <div class="slider-container">
         <div class="slider">
             <?php
-            // Initialiser un tableau vide pour stocker les chemins d'accès aux images
             $slider_images = array();
-
-            // Requête SQL pour récupérer les noms de logements
             $requete = "SELECT nom FROM logement";
             $resultat = $connexion->query($requete);
 
-            // Ajouter les chemins d'accès aux images au tableau $slider_images
             while ($row = $resultat->fetch_assoc()) {
                 $nom_logement = $row["nom"];
                 $image_path = 'img/' . $nom_logement . '/Illustration.jpg';
-                // Vérifier si le fichier image existe avant de l'ajouter au tableau
                 if (file_exists($image_path)) {
                     $slider_images[] = $image_path;
                 }
             }
 
-            // Boucle pour afficher chaque image du slider
             foreach ($slider_images as $index => $image_path) {
                 echo '<div class="slide">';
                 echo '<a href="logement.php?id=' . ($index + 1) . '">';
@@ -64,7 +56,6 @@
     </div>
     <div class="dots-container">
         <?php
-        // Compter le nombre d'images pour générer le nombre de dots correspondant
         $nombre_images = count($slider_images);
         for ($i = 0; $i < $nombre_images; $i++) {
             echo '<span class="dot"></span>';
@@ -92,11 +83,9 @@
             <h2>Résultats :</h2>
             <div id="dernieres-reservations-liste" style="display: flex;flex-wrap: wrap;justify-content: center;">
                 <?php
-                    // Requête SQL pour récupérer les informations des logements
                     $requete = "SELECT * FROM logement";
                     $resultat = $connexion->query($requete);
 
-                    // Affichage des logements
                     if ($resultat->num_rows > 0) {
                         while ($row = $resultat->fetch_assoc()) {
                             echo '<div class="location-container reservation" data-lieu="' . $row["lieu"] . '" data-prix="' . $row["prix"] . '">';
@@ -130,7 +119,7 @@
         
     </main>
     <footer>
-        <p style="margin: auto;color: white;">&copy; 2024 Vidal et Fils</p>
+        <p>&copy; 2024 Vidal et Fils</p>
     </footer>
     <script src="script.js"></script>
 </body>
