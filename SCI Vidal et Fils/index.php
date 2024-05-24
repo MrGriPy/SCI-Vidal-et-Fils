@@ -1,5 +1,5 @@
 <?php
-    // Veuillez ne pas lire les informations de la ligne suivante relatives à la connexion à la base de données pour des raisons de sécurité)
+    // Veuillez ne pas lire les informations de la ligne suivante relatives à la connexion à la base de données pour des raisons de sécurité
     $connexion = new mysqli("localhost", "tvidal", "Marioetsonic1975!", "tvidal_vidaletfils");
     if ($connexion->connect_error) {
         die("Échec de la connexion : " . $connexion->connect_error);
