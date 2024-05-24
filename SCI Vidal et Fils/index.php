@@ -1,6 +1,6 @@
 <?php
-    // Veuillez ne pas lire les informations de la ligne suivante relatives à la connexion à la base de données pour des raisons de sécurité
-    $connexion = new mysqli("localhost", "tvidal", "Marioetsonic1975!", "tvidal_vidaletfils");
+    $connexion = new mysqli("localhost", "tvidal", "dbmotdepasse2024", "tvidal_vidaletfils");
+
     if ($connexion->connect_error) {
         die("Échec de la connexion : " . $connexion->connect_error);
     }
@@ -32,7 +32,6 @@
             $slider_images = array();
             $requete = "SELECT nom FROM logement";
             $resultat = $connexion->query($requete);
-
             while ($row = $resultat->fetch_assoc()) {
                 $nom_logement = $row["nom"];
                 $image_path = 'img/' . $nom_logement . '/Illustration.jpg';
@@ -85,7 +84,6 @@
                 <?php
                     $requete = "SELECT * FROM logement";
                     $resultat = $connexion->query($requete);
-
                     if ($resultat->num_rows > 0) {
                         while ($row = $resultat->fetch_assoc()) {
                             echo '<div class="location-container reservation" data-lieu="' . $row["lieu"] . '" data-prix="' . $row["prix"] . '">';
@@ -93,8 +91,6 @@
 
                             echo '<h3>' . $row["nom"] . '</h3>';
                             echo '<img src="img/' . $row["nom"] . '/Illustration.jpg" alt="' . $row["nom"] . '" class="illustration">';
-
-
                             echo '<div>';
                             echo '<div class="description1">';
                             echo '<img src="img/prix.png" alt="Prix">';
@@ -119,7 +115,7 @@
         
     </main>
     <footer>
-        <p>&copy; 2024 Vidal et Fils</p>
+        <p style>&copy; 2024 Vidal et Fils</p>
     </footer>
     <script src="script.js"></script>
 </body>
