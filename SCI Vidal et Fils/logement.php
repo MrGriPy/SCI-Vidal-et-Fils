@@ -18,12 +18,10 @@
     <main>
         <section class="location-details">
             <?php
-            // Veuillez ne pas lire les informations de la ligne suivante relatives à la connexion à la base de données pour des raisons de sécurité
-            $connexion = new mysqli("localhost", "tvidal", "Marioetsonic1975!", "tvidal_vidaletfils");
+            $connexion = new mysqli("localhost", "tvidal", "dbmotdepasse2024", "tvidal_vidaletfils");
             if ($connexion->connect_error) {
                 die("Échec de la connexion : " . $connexion->connect_error);
             }
-
             $logement_id = $_GET['id'];
             $requete = "SELECT * FROM logement WHERE id = $logement_id";
             $resultat = $connexion->query($requete);
@@ -59,7 +57,6 @@
         function openModal() {
             document.getElementById("myModal").style.display = "block";
         }
-
         function closeModal() {
             document.getElementById("myModal").style.display = "none";
         }
