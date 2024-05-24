@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location - Appartement Clairsigny</title>
+    <title>Location</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="img/logo.PNG" />
+    <link rel="icon" href="img/icone.png" />
 </head>
 <body>
     <header>
         <nav>
-            <a href="index.php"><img src="img/logo.PNG" alt="Logo" class="logo"></a>
+            <a href="index.php"><img src="img/logo.png" alt="Accueil" class="logo"></a>
             <a href="mentions_legales.html" class="infos">À propos</a>
             <a href="profil.php"><img src="img/profile.png" alt="Profil" class="profile"></a>
         </nav>
@@ -18,21 +18,17 @@
     <main>
         <section class="location-details">
             <?php
-            // Connexion à la base de données
+            // Veuillez ne pas lire les informations de la ligne suivante relatives à la connexion à la base de données pour des raisons de sécurité
             $connexion = new mysqli("localhost", "tvidal", "Marioetsonic1975!", "tvidal_vidaletfils");
-
-            // Vérifier la connexion
             if ($connexion->connect_error) {
                 die("Échec de la connexion : " . $connexion->connect_error);
             }
 
-            // Récupérer les informations du logement depuis la base de données
-            $logement_id = $_GET['id']; // Supposons que l'ID du logement est passé dans l'URL
+            $logement_id = $_GET['id'];
             $requete = "SELECT * FROM logement WHERE id = $logement_id";
             $resultat = $connexion->query($requete);
 
             if ($resultat->num_rows > 0) {
-     // Afficher les détails du logement
         $row = $resultat->fetch_assoc();
      echo '<h1>' . $row["nom"] . '</h1>';
      echo '<div class="location-images">';
@@ -51,23 +47,19 @@
      echo "Aucune information disponible pour ce logement.";
      }
 
-
-            // Fermer la connexion à la base de données
             $connexion->close();
             ?>
         </section>
     </main>
-    <footer style="margin=0">
+    <footer>
         <p>&copy; 2024 Vidal et Fils</p>
     </footer>
     <script src="script.js"></script>
     <script>
-        // Fonction pour ouvrir le modal et afficher l'image en grand
         function openModal() {
             document.getElementById("myModal").style.display = "block";
         }
 
-        // Fonction pour fermer le modal
         function closeModal() {
             document.getElementById("myModal").style.display = "none";
         }
