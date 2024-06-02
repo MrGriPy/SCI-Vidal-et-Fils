@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_insertion->close();
     }
     $stmt->close();
-t
+
     $sql_get_logement_name = "SELECT nom FROM logement WHERE id = ?";
     $stmt_logement = $conn->prepare($sql_get_logement_name);
     $stmt_logement->bind_param('i', $logement_id);
