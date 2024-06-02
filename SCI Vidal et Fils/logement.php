@@ -6,6 +6,7 @@
     <title>Location</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="img/icone.png" />
+
 </head>
 <body>
     <header>
@@ -16,7 +17,7 @@
         </nav>
     </header>
     <main>
-        <section class="location-details">
+        <section class="location-details" style="margin-bottom: 232px">
             <?php
             $connexion = new mysqli("localhost", "tvidal", "dbmotdepasse2024", "tvidal_vidaletfils");
             if ($connexion->connect_error) {
@@ -27,62 +28,112 @@
             $resultat = $connexion->query($requete);
 
             if ($resultat->num_rows > 0) {
-        $row = $resultat->fetch_assoc();
-     echo '<h1>' . $row["nom"] . '</h1>';
-     echo '<div class="location-images">';
-     foreach(glob("img/{$row['nom']}/*.jpg") as $image) {
-        echo "<img src='$image' alt='{$row['nom']}' style='width: auto; max-height: 270px;'>";
-     }
-     echo '</div>';
-     echo '<div class="location-info">';
-     echo '<p><strong>Lieu:</strong> ' . $row["lieu"] . '</p>';
-     echo '<p><strong>Prix:</strong> ' . $row["prix"] . '€ / mois</p>';
-     echo '<p><strong>Surface:</strong> ' . $row["surface"] . 'm²</p>';
-     echo '<p><strong>Description:</strong> ' . $row["description"] . '</p>';
-     echo '<button>Réserver</button>';
-     echo '</div>';
-     } else {
-     echo "Aucune information disponible pour ce logement.";
-     }
+                $row = $resultat->fetch_assoc();
+                echo '<h1>' . $row["nom"] . '</h1>';
+                echo '<div class="location-images">';
+                foreach(glob("img/{$row['nom']}/*.jpg") as $image) {
+                    echo "<img src='$image' alt='{$row['nom']}' style='width: auto; max-height: 270px;'>";
+                }
+                echo '</div>';
+                echo '<div class="location-info">';
+                echo '<p><strong>Lieu :</strong> ' . $row["lieu"] . '</p>';
+                echo '<p><strong>Prix :</strong> ' . $row["prix"] . ' € / '. $row["periode"] . '</p>';
+                echo '<p><strong>Surface :</strong> ' . $row["surface"] . 'm²</p>';
+                echo '<p><strong>Description :</strong> ' . $row["description"] . '</p>';
+                echo '<button onclick="openModal()">Réserver</button>';
+                echo '</div>';
+            } else {
+                echo "Aucune information disponible pour ce logement.";
+            }
 
             $connexion->close();
             ?>
         </section>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <form action="logement.php?id=<?php echo $logement_id; ?>" method="post">
+                    <label for="date_debut">Date de début :</label>
+                    <input type="date" id="date_debut" name="date_debut" required><br><br>
+                    <label for="date_fin">Date de fin :</label>
+                    <input type="date" id="date_fin" name="date_fin" required><br><br>
+                    <label for="email">Adresse e-mail :</label>
+                    <input type="email" id="email" name="email" required><br><br>
+                    <input type="hidden" name="logement_id" value="<?php echo $logement_id; ?>">
+                    <input type="submit" value="Réserver">
+                </form>
+            </div>
+        </div>
+        <?php
+$servername = "localhost";
+$username = "tvidal";
+$password = "dbmotdepasse2024";
+$database = "tvidal_vidaletfils";
+
+$conn = new mysqli($servername, $username, $password, $database);
+
+if ($conn->connect_error) {
+    die("La connexion a échoué : " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $date_debut = $_POST['date_debut'];
+    $date_fin = $_POST['date_fin'];
+    $email = $_POST['email'];
+    $logement_id = $_POST['logement_id'];
+
+    $sql_get_user_id = "SELECT id_utilisateur FROM utilisateur WHERE email = ?";
+    $stmt = $conn->prepare($sql_get_user_id);
+    $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $id_utilisateur = $row["id_utilisateur"];
+    } else {
+        $sql_insertion_utilisateur = "INSERT INTO utilisateur (email) VALUES (?)";
+        $stmt_insertion = $conn->prepare($sql_insertion_utilisateur);
+        $stmt_insertion->bind_param('s', $email);
+        $stmt_insertion->execute();
+        $id_utilisateur = $stmt_insertion->insert_id;
+        $stmt_insertion->close();
+    }
+    $stmt->close();
+t
+    $sql_get_logement_name = "SELECT nom FROM logement WHERE id = ?";
+    $stmt_logement = $conn->prepare($sql_get_logement_name);
+    $stmt_logement->bind_param('i', $logement_id);
+    $stmt_logement->execute();
+    $result_logement = $stmt_logement->get_result();
+    $logement = $result_logement->fetch_assoc();
+    $nom_logement = $logement['nom'];
+    $stmt_logement->close();
+
+    $sql_insert_reservation = "INSERT INTO reservation (id_utilisateur, date_debut, date_fin, nom_logement) VALUES (?, ?, ?, ?)";
+    $stmt_reservation = $conn->prepare($sql_insert_reservation);
+    $stmt_reservation->bind_param('isss', $id_utilisateur, $date_debut, $date_fin, $nom_logement);
+
+    if ($stmt_reservation->execute()) {
+        echo '<p style="color: white; background-color: gray; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Réservation enregistrée avec succès.</p>';
+    } else {
+        echo "Erreur : " . $stmt_reservation->error;
+    }
+    $stmt_reservation->close();
+}
+
+$conn->close();
+?>
     </main>
     <footer>
         <p>&copy; 2024 Vidal et Fils</p>
     </footer>
-    <script src="script.js"></script>
     <script>
         function openModal() {
             document.getElementById("myModal").style.display = "block";
         }
         function closeModal() {
             document.getElementById("myModal").style.display = "none";
-        }
-
-        var slideIndex = 1;
-        showSlides(slideIndex);
-
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
-        }
-
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
-        }
-
-        function showSlides(n) {
-            var i;
-            var slides = document.getElementsByClassName("zoom-img");
-            if (n > slides.length) {slideIndex = 1}
-            if (n < 1) {slideIndex = slides.length}
-            for (i = 0; i < slides.length; i++) {
-                slides[i].onclick = function(){
-                    openModal();
-                    document.getElementById("img01").src = this.src;
-                }
-            }
         }
     </script>
 </body>
