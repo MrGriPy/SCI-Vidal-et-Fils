@@ -98,7 +98,7 @@
                             echo '<img src="img/lieu.png" alt="Lieu">';
                             echo '</div>';
                             echo '<div class="description2">';
-                            echo '<p>' . $row["prix"] . '€ / mois' . $row["type"] . '</p>';
+                            echo '<p>' . $row["prix"] . ' € / '. $row["periode"] . '</p>';
                             echo '<p>' . $row["surface"] . 'm²' . '</p>';
                             echo '<p>' . $row["lieu"] . '</p>';
                             echo '</div>';
