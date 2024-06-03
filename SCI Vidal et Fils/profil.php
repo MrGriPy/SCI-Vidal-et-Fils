@@ -76,7 +76,7 @@ if (isset($_POST['signup'])) {
                     <label for="email">Email :</label>
                     <input type="email" id="email" name="email" required>
                     <label for="motdepasse">Mot de passe :</label>
-                    <input type="password" id="motdepasse" name="motdepasse" required>
+                    <input type="password" id="motdepasse" name="motdepasse" required><br>
                     <button type="submit" name="login">Se connecter</button>
                 </form>
                 <p>Pas de compte ? <a href="#" id="signup-link">Créer un compte</a></p>
@@ -97,7 +97,7 @@ if (isset($_POST['signup'])) {
                         <label for="email-signup">Email :</label>
                         <input type="email" id="email-signup" name="email" required>
                         <label for="motdepasse-signup">Mot de passe :</label>
-                        <input type="password" id="motdepasse-signup" name="motdepasse" required>
+                        <input type="password" id="motdepasse-signup" name="motdepasse" required><br>
                         <button type="submit" name="signup">S'inscrire</button>
                     </form>
                 </div>
