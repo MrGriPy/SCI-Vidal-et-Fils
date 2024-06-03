@@ -63,13 +63,13 @@ $resultatReservations = $connexion->query($requeteReservations);
                     echo "Date de Fin : " . htmlspecialchars($row['date_fin']) . "<br><br>";
                 }
             } else {
-                echo "Aucune réservation trouvée.";
+                echo "Aucune réservation trouvée.<br><br>";
             }
             ?>
+            <a href="index.php" style="color: white; background-color: gray; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Se déconnecter</a>
         </section>
-        <a href="index.php" style="color: white; background-color: gray; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Se déconnecter</a>
     </main>
-    <footer style="position: absolute;">
+    <footer style="margin-top: 191px;">
         <p>&copy; 2024 Vidal et Fils</p>
     </footer>
 </body>
