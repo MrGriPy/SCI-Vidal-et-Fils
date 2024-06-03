@@ -6,7 +6,6 @@
     <title>Location</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="img/icone.png" />
-
 </head>
 <body>
     <header>
@@ -53,6 +52,7 @@
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
                 <form action="logement.php?id=<?php echo $logement_id; ?>" method="post">
+                    <?php echo "Veuillez choisir vos dates en fonction de la période indiquée. <br><br>"; ?>
                     <label for="date_debut">Date de début :</label>
                     <input type="date" id="date_debut" name="date_debut" required><br><br>
                     <label for="date_fin">Date de fin :</label>
@@ -116,6 +116,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt_reservation->execute()) {
         echo '<p style="color: white; background-color: gray; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Réservation enregistrée avec succès.</p>';
+        
+        // Envoi de l'email de confirmation
+        $destinataire = $email;
+        $sujet = "Confirmation de votre réservation";
+        $message = "
+        <html>
+        <body>
+        <h1>Confirmation de votre réservation</h1>
+        <p>Bonjour,</p>
+        <p>Votre réservation pour le logement <strong>" . htmlspecialchars($nom_logement) . "</strong> a été confirmée.</p>
+        <p>Dates : du <strong>" . htmlspecialchars($date_debut) . "</strong> au <strong>" . htmlspecialchars($date_fin) . "</strong>.</p>
+        <p>Ceci est un mail automatique. En cas de problème, vous pouvez répondre à ce message.</p>
+        <p>Merci de votre confiance.</p>
+        <p>Cordialement,</p>
+        <p>L'équipe Vidal et Fils</p>
+        </body>
+        </html>
+        ";
+        $headers = "From: thomas.vidal@edu.univ-eiffel.fr\r\n";
+        $headers .= "Reply-To: thomas.vidal@edu.univ-eiffel.fr\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+        if (mail($destinataire, $sujet, $message, $headers)) {
+            echo '<p style="color: white; background-color: gray; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Email de confirmation envoyé avec succès.</p>';
+        } else {
+            echo '<p style="color: white; background-color: gray; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Erreur lors de l\'envoi de l\'email de confirmation.</p>';
+        }
     } else {
         echo "Erreur : " . $stmt_reservation->error;
     }
