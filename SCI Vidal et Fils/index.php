@@ -30,25 +30,26 @@
     <div class="slider-container">
         <div class="slider">
             <?php
-            $slider_images = array();
-            $requete = "SELECT nom FROM logement";
-            $resultat = $connexion->query($requete);
-            while ($row = $resultat->fetch_assoc()) {
-                $nom_logement = $row["nom"];
-                $image_path = 'img/' . $nom_logement . '/Illustration.jpg';
-                if (file_exists($image_path)) {
-                    $slider_images[] = $image_path;
-                }
-            }
+$slider_images = array();
+$requete = "SELECT nom FROM logement";
+$resultat = $connexion->query($requete);
+while ($row = $resultat->fetch_assoc()) {
+    $nom_logement = $row["nom"];
+    $image_path = 'img/' . $nom_logement . '/Illustration.jpg';
+    if (file_exists($image_path)) {
+        $slider_images[] = array("path" => $image_path, "name" => $nom_logement);
+    }
+}
 
-            foreach ($slider_images as $index => $image_path) {
-                echo '<div class="slide">';
-                echo '<a href="logement.php?id=' . ($index + 1) . '">';
-                echo '<img src="' . $image_path . '" alt="Slide ' . ($index + 1) . '">';
-                echo '</a>';
-                echo '</div>';
-            }
-            ?>
+foreach ($slider_images as $index => $image_data) {
+    echo '<div class="slide">';
+    echo '<a href="logement.php?id=' . ($index + 1) . '">';
+    echo '<img src="' . $image_data["path"] . '" alt="' . htmlspecialchars($image_data["name"], ENT_QUOTES, 'UTF-8') . '">';
+    echo '</a>';
+    echo '</div>';
+}
+?>
+
         </div>
 
         <button class="prev">&#10094;</button>
