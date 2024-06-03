@@ -1,15 +1,12 @@
 <?php
 session_start();
 
-// Connexion à la base de données
 $connexion = new mysqli("localhost", "tvidal", "dbmotdepasse2024", "tvidal_vidaletfils");
 
-// Vérifier la connexion
 if ($connexion->connect_error) {
     die("Échec de la connexion : " . $connexion->connect_error);
 }
 
-// Vérifiez si l'utilisateur est connecté
 if (!isset($_SESSION['email'])) {
     header("Location: profil.php");
     exit();
@@ -22,7 +19,6 @@ $resultat = $connexion->query($requete);
 $utilisateur = $resultat->fetch_assoc();
 $user_id = $utilisateur['id_utilisateur'];
 
-// Récupérer les réservations de l'utilisateur depuis la table "reservation"
 $requeteReservations = "SELECT * FROM reservation WHERE id_utilisateur='$user_id'";
 $resultatReservations = $connexion->query($requeteReservations);
 ?>
@@ -54,9 +50,8 @@ $resultatReservations = $connexion->query($requeteReservations);
             <h2>Bienvenue <?php echo htmlspecialchars($utilisateur['prenom'] . ' ' . $utilisateur['nom']); ?></h2>
             <br>
             <h3>Vos Réservations</h3>
-            <?php // Vérifier s'il y a des réservations
+            <?php
             if ($resultatReservations->num_rows > 0) {
-                // Afficher les réservations
                 while ($row = $resultatReservations->fetch_assoc()) {
                     echo "Logement réservé : " . htmlspecialchars($row['nom_logement']) . "<br>";
                     echo "Date de Début : " . htmlspecialchars($row['date_debut']) . "<br>";
