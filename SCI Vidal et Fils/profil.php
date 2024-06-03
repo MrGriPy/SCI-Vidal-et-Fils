@@ -31,11 +31,23 @@ if (isset($_POST['signup'])) {
     $email = $connexion->real_escape_string($_POST['email']);
     $motdepasse = $connexion->real_escape_string($_POST['motdepasse']);
 
-    $requete = "INSERT INTO utilisateur (nom, prenom, email, motdepasse) VALUES ('$nom', '$prenom', '$email', '$motdepasse')";
-    if ($connexion->query($requete) === TRUE) {
-        echo "<p>Compte créé avec succès !</p>";
+    $requete_verification = "SELECT * FROM utilisateur WHERE email='$email'";
+    $resultat_verification = $connexion->query($requete_verification);
+
+    if ($resultat_verification->num_rows > 0) {
+        $requete_mise_a_jour = "UPDATE utilisateur SET nom='$nom', prenom='$prenom', motdepasse='$motdepasse' WHERE email='$email'";
+        if ($connexion->query($requete_mise_a_jour) === TRUE) {
+            $updateSuccess = "<p>Compte mis à jour avec succès !</p>";
+        } else {
+            $updateError = "<p>Erreur lors de la mise à jour du compte : " . $connexion->error . "</p>";
+        }
     } else {
-        echo "<p>Erreur lors de la création du compte : " . $connexion->error . "</p>";
+        $requete_insertion = "INSERT INTO utilisateur (nom, prenom, email, motdepasse) VALUES ('$nom', '$prenom', '$email', '$motdepasse')";
+        if ($connexion->query($requete_insertion) === TRUE) {
+            $registerSuccess = "<p>Compte créé avec succès !</p>";
+        } else {
+            $registerError = "<p>Erreur lors de la création du compte : " . $connexion->error . "</p>";
+        }
     }
 }
 ?>
@@ -82,6 +94,16 @@ if (isset($_POST['signup'])) {
                 <p>Pas de compte ? <a href="#" id="signup-link">Créer un compte</a></p>
                 <?php if ($loginError) : ?>
                     <p class="error-message"><?php echo $loginError; ?></p>
+                <?php endif; ?>
+                <?php if ($updateSuccess) : ?>
+                    <p><?php echo $updateSuccess; ?></p>
+                <?php else : ?>
+                <p><?php echo $updateError; ?></p>
+                <?php endif; ?>
+                <?php if ($registerSuccess) : ?>
+                    <p><?php echo $registerSuccess; ?></p>
+                <?php else : ?>
+                <p><?php echo $registerError; ?></p>
                 <?php endif; ?>
             </div>
 
