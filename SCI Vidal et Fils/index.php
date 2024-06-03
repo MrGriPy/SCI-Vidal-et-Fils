@@ -25,7 +25,8 @@
     </header>
     <main>
         <section class="presentation">
-    <h2>Bienvenue sur notre site de location. Vous y trouverez nos appartements du Mans ainsi que notre maison sur Vicdessos.</h2>
+    <h2 style="text-align: center;">Bienvenue sur notre site de location.<br>
+    Vous y trouverez nos appartements du Mans, ainsi que notre maison sur Vicdessos.</h2>
     <div class="slider-container">
         <div class="slider">
             <?php
