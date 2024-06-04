@@ -139,27 +139,5 @@ if (isset($_POST['signup'])) {
     <footer style="position: fixed; bottom: 0">
         <p>&copy; 2024 Vidal et Fils</p>
     </footer>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var signupLink = document.getElementById("signup-link");
-            var popup = document.getElementById("signup-popup");
-            var close = document.getElementsByClassName("close")[0];
-
-            signupLink.onclick = function(event) {
-                event.preventDefault();
-                popup.style.display = "block";
-            }
-
-            close.onclick = function() {
-                popup.style.display = "none";
-            }
-
-            window.onclick = function(event) {
-                if (event.target == popup) {
-                    popup.style.display = "none";
-                }
-            }
-        });
-    </script>
 </body>
 </html>
