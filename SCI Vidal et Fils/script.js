@@ -85,23 +85,3 @@ function filtrerEtTrierReservations() {
     triCroissant = !triCroissant;
 }
 window.addEventListener('load', filtrerEtTrierReservations);
-
-    function togglePassword() {
-        var passwordField = document.getElementById("motdepasse");
-        var showPasswordCheckbox = document.getElementById("showPassword");
-        if (showPasswordCheckbox.checked) {
-            passwordField.type = "text";
-        } else {
-            passwordField.type = "password";
-        }
-    }
-
-    function togglePasswordSignup() {
-        var passwordField = document.getElementById("motdepasse-signup");
-        var showPasswordCheckbox = document.getElementById("showPasswordSignup");
-        if (showPasswordCheckbox.checked) {
-            passwordField.type = "text";
-        } else {
-            passwordField.type = "password";
-        }
-    }
