@@ -85,12 +85,16 @@ if (isset($_POST['signup'])) {
             <div class="container">
                 <h2>Connexion</h2>
                 <form action="profil.php" method="POST">
-                    <label for="email">Email :</label>
-                    <input type="email" id="email" name="email" required>
-                    <label for="motdepasse">Mot de passe :</label>
-                    <input type="password" id="motdepasse" name="motdepasse" required><br>
-                    <button type="submit" name="login">Se connecter</button>
-                </form>
+    <label for="email">Email :</label>
+    <input type="email" id="email" name="email" required>
+    
+    <label for="motdepasse">Mot de passe :</label>
+    <input type="password" id="motdepasse" name="motdepasse" required>
+    <input type="checkbox" id="showPassword" onclick="togglePassword()"> Afficher le mot de passe<br>
+    
+    <button type="submit" name="login">Se connecter</button>
+</form>
+
                 <p>Pas de compte ? <a href="#" id="signup-link">Créer un compte</a></p>
                 <?php if ($loginError) : ?>
                     <p class="error-message"><?php echo $loginError; ?></p>
@@ -112,16 +116,22 @@ if (isset($_POST['signup'])) {
                     <span class="close" style="cursor: pointer">&times;</span>
                     <h2>Créer un compte</h2>
                     <form action="profil.php" method="POST">
-                        <label for="nom">Nom :</label>
-                        <input type="text" id="nom" name="nom" required>
-                        <label for="prenom">Prénom :</label>
-                        <input type="text" id="prenom" name="prenom" required>
-                        <label for="email-signup">Email :</label>
-                        <input type="email" id="email-signup" name="email" required>
-                        <label for="motdepasse-signup">Mot de passe :</label>
-                        <input type="password" id="motdepasse-signup" name="motdepasse" required><br>
-                        <button type="submit" name="signup">S'inscrire</button>
-                    </form>
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom" required>
+    
+    <label for="prenom">Prénom :</label>
+    <input type="text" id="prenom" name="prenom" required>
+    
+    <label for="email-signup">Email :</label>
+    <input type="email" id="email-signup" name="email" required>
+    
+    <label for="motdepasse-signup">Mot de passe :</label>
+    <input type="password" id="motdepasse-signup" name="motdepasse" required>
+    <input type="checkbox" id="showPasswordSignup" onclick="togglePasswordSignup()"> Afficher le mot de passe<br>
+    
+    <button type="submit" name="signup">S'inscrire</button>
+</form>
+
                 </div>
             </div>
         </section>
