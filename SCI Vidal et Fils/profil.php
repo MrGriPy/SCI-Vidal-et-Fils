@@ -59,7 +59,7 @@ if (isset($_POST['signup'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="style_profil.css">
+    <link rel="script" href="script.js">
     <link rel="icon" href="img/icone.png" />
     <style>
         form label {
@@ -90,12 +90,12 @@ if (isset($_POST['signup'])) {
     
     <label for="motdepasse">Mot de passe :</label>
     <input type="password" id="motdepasse" name="motdepasse" required>
-    <input type="checkbox" id="showPassword" onclick="togglePassword()"> Afficher le mot de passe<br>
+    <input type="checkbox" id="showPassword" onclick="togglePassword()"> Afficher le mot de passe<br><br>
     
     <button type="submit" name="login">Se connecter</button>
 </form>
 
-                <p>Pas de compte ? <a href="#" id="signup-link">Créer un compte</a></p>
+                <p>Pas de compte ? <a href="#" id="signup-link" style="text-decoration: underline">Créer un compte</a></p>
                 <?php if ($loginError) : ?>
                     <p class="error-message"><?php echo $loginError; ?></p>
                 <?php endif; ?>
@@ -127,7 +127,7 @@ if (isset($_POST['signup'])) {
     
     <label for="motdepasse-signup">Mot de passe :</label>
     <input type="password" id="motdepasse-signup" name="motdepasse" required>
-    <input type="checkbox" id="showPasswordSignup" onclick="togglePasswordSignup()"> Afficher le mot de passe<br>
+    <input type="checkbox" id="showPasswordSignup" onclick="togglePasswordSignup()"> Afficher le mot de passe<br><br>
     
     <button type="submit" name="signup">S'inscrire</button>
 </form>
@@ -141,3 +141,45 @@ if (isset($_POST['signup'])) {
     </footer>
 </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+            var signupLink = document.getElementById("signup-link");
+            var popup = document.getElementById("signup-popup");
+            var close = document.getElementsByClassName("close")[0];
+
+            signupLink.onclick = function(event) {
+                event.preventDefault();
+                popup.style.display = "block";
+            }
+
+            close.onclick = function() {
+                popup.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == popup) {
+                    popup.style.display = "none";
+                }
+            }
+        });
+        
+    function togglePassword() {
+        var passwordField = document.getElementById("motdepasse");
+        var showPasswordCheckbox = document.getElementById("showPassword");
+        if (showPasswordCheckbox.checked) {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
+        }
+    }
+
+    function togglePasswordSignup() {
+        var passwordField = document.getElementById("motdepasse-signup");
+        var showPasswordCheckbox = document.getElementById("showPasswordSignup");
+        if (showPasswordCheckbox.checked) {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
+        }
+    }
+</script>
