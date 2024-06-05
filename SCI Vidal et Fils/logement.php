@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Bonjour,</p>
         <p>Votre réservation pour le logement <strong>" . htmlspecialchars($nom_logement) . "</strong> a été confirmée.</p>
         <p>Dates : du <strong>" . htmlspecialchars($date_debut) . "</strong> au <strong>" . htmlspecialchars($date_fin) . "</strong>.</p>
-        <p>Ceci est un mail automatique. En cas de problème, vous pouvez répondre à ce message.</p>
+        <p>Ceci est un mail automatique. Pour toute assistance, vous pouvez répondre à ce courriel. Nous vous contacterons dans les meilleurs délais.</p>
         <p>Merci de votre confiance.</p>
         <p>Cordialement,</p>
         <p>L'équipe Vidal et Fils</p>
