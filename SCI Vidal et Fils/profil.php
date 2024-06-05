@@ -7,21 +7,23 @@ if ($connexion->connect_error) {
     die("Échec de la connexion : " . $connexion->connect_error);
 }
 
-$loginError = '';
-
 if (isset($_POST['login'])) {
     $email = $connexion->real_escape_string($_POST['email']);
     $motdepasse = $connexion->real_escape_string($_POST['motdepasse']);
+
+    $loginEmailValue = $email;
+    $loginPasswordValue = $motdepasse;
 
     $requete = "SELECT * FROM utilisateur WHERE email='$email' AND motdepasse='$motdepasse'";
     $resultat = $connexion->query($requete);
 
     if ($resultat->num_rows > 0) {
         $_SESSION['email'] = $email;
-        header("Location: espace_client.php"); 
+        header("Location: espace_client.php");
         exit();
     } else {
-        $loginError = "Identifiants incorrects.";
+        $loginEmailError = "Email incorrect.<br><br>";
+        $loginPasswordError = "Mot de passe incorrect.<br><br>";
     }
 }
 
@@ -31,22 +33,32 @@ if (isset($_POST['signup'])) {
     $email = $connexion->real_escape_string($_POST['email']);
     $motdepasse = $connexion->real_escape_string($_POST['motdepasse']);
 
-    $requete_verification = "SELECT * FROM utilisateur WHERE email='$email'";
-    $resultat_verification = $connexion->query($requete_verification);
+    $registerNomValue = $nom;
+    $registerPrenomValue = $prenom;
+    $registerEmailValue = $email;
+    $registerPasswordValue = $motdepasse;
 
-    if ($resultat_verification->num_rows > 0) {
-        $requete_mise_a_jour = "UPDATE utilisateur SET nom='$nom', prenom='$prenom', motdepasse='$motdepasse' WHERE email='$email'";
-        if ($connexion->query($requete_mise_a_jour) === TRUE) {
-            $updateSuccess = "<p>Compte mis à jour avec succès !</p>";
-        } else {
-            $updateError = "<p>Erreur lors de la mise à jour du compte : " . $connexion->error . "</p>";
-        }
+    if (strlen($motdepasse) < 8) {
+        $registerPasswordError = "Le mot de passe doit comporter au moins 8 caractères.<br><br>";
     } else {
-        $requete_insertion = "INSERT INTO utilisateur (nom, prenom, email, motdepasse) VALUES ('$nom', '$prenom', '$email', '$motdepasse')";
-        if ($connexion->query($requete_insertion) === TRUE) {
-            $registerSuccess = "<p>Compte créé avec succès !</p>";
+        $requete_verification = "SELECT * FROM utilisateur WHERE email='$email'";
+        $resultat_verification = $connexion->query($requete_verification);
+
+        if ($resultat_verification->num_rows > 0) {
+            $requete_mise_a_jour = "UPDATE utilisateur SET nom='$nom', prenom='$prenom', motdepasse='$motdepasse' WHERE email='$email'";
+            if ($connexion->query($requete_mise_a_jour) === TRUE) {
+                $updateSuccess = "<p>Compte mis à jour avec succès !</p>";
+            } else {
+                $updateError = "<p>Erreur lors de la mise à jour du compte : " . $connexion->error . "</p>";
+            }
         } else {
-            $registerError = "<p>Erreur lors de la création du compte : " . $connexion->error . "</p>";
+            $requete_insertion = "INSERT INTO utilisateur (nom, prenom, email, motdepasse) VALUES ('$nom', '$prenom', '$email', '$motdepasse')";
+            if ($connexion->query($requete_insertion) === TRUE) {
+                $registerSuccess = "<p>Compte créé avec succès !</p>";
+            } else {
+                $registerError = "<p>Erreur lors de la création du compte : " . $connexion->error . "</p>";
+                $registerEmailError = "Email déjà utilisé.";
+            }
         }
     }
 }
@@ -70,6 +82,10 @@ if (isset($_POST['signup'])) {
         form input {
             margin-bottom: 10px;
         }
+
+        .error-message {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -85,29 +101,36 @@ if (isset($_POST['signup'])) {
             <div class="container">
                 <h2>Connexion</h2>
                 <form action="profil.php" method="POST">
-    <label for="email">Email :</label>
-    <input type="email" id="email" name="email" required>
-    
-    <label for="motdepasse">Mot de passe :</label>
-    <input type="password" id="motdepasse" name="motdepasse" required>
-    <input type="checkbox" id="showPassword" onclick="togglePassword()"> Afficher le mot de passe<br><br>
-    
-    <button type="submit" name="login">Se connecter</button>
-</form>
+                    <label for="email">*Email :</label>
+                    <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($loginEmailValue); ?>">
+                    <?php if ($loginEmailError) : ?>
+                        <p class="error-message"><?php echo $loginEmailError; ?></p>
+                    <?php endif; ?>
 
-                <p>Pas de compte ? <a href="#" id="signup-link" style="text-decoration: underline">Créer un compte</a></p>
+                    <label for="motdepasse">*Mot de passe :</label>
+                    <input type="password" id="motdepasse" name="motdepasse" required value="<?php echo htmlspecialchars($loginPasswordValue); ?>">
+                    <input type="checkbox" id="showPassword" onclick="togglePassword()"> Afficher le mot de passe<br>
+                    <?php if ($loginPasswordError) : ?>
+                        <p class="error-message"><?php echo $loginPasswordError; ?></p>
+                    <?php endif; ?>
+
+                    <button type="submit" name="login">Se connecter</button>
+                </form>
+                <p>Pas de compte ? <a href="#" id="signup-link">Créer un compte</a></p>
                 <?php if ($loginError) : ?>
-                    <p class="error-message"><?php echo $loginError; ?></p>
                 <?php endif; ?>
-                <?php if ($updateSuccess) : ?>
+                <?php if (isset($updateSuccess)) : ?>
                     <p><?php echo $updateSuccess; ?></p>
-                <?php else : ?>
-                <p><?php echo $updateError; ?></p>
+                <?php elseif (isset($updateError)) : ?>
+                    <p class="error-message"><?php echo $updateError; ?></p>
                 <?php endif; ?>
-                <?php if ($registerSuccess) : ?>
+                <?php if (isset($registerSuccess)) : ?>
                     <p><?php echo $registerSuccess; ?></p>
-                <?php else : ?>
-                <p><?php echo $registerError; ?></p>
+                <?php elseif (isset($registerError)) : ?>
+                    <p class="error-message"><?php echo $registerError; ?></p>
+                    <?php if ($registerEmailError) : ?>
+                        <p class="error-message"><?php echo $registerEmailError; ?></p>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
 
@@ -116,22 +139,27 @@ if (isset($_POST['signup'])) {
                     <span class="close" style="cursor: pointer">&times;</span>
                     <h2>Créer un compte</h2>
                     <form action="profil.php" method="POST">
-    <label for="nom">Nom :</label>
-    <input type="text" id="nom" name="nom" required>
-    
-    <label for="prenom">Prénom :</label>
-    <input type="text" id="prenom" name="prenom" required>
-    
-    <label for="email-signup">Email :</label>
-    <input type="email" id="email-signup" name="email" required>
-    
-    <label for="motdepasse-signup">Mot de passe :</label>
-    <input type="password" id="motdepasse-signup" name="motdepasse" required>
-    <input type="checkbox" id="showPasswordSignup" onclick="togglePasswordSignup()"> Afficher le mot de passe<br><br>
-    
-    <button type="submit" name="signup">S'inscrire</button>
-</form>
+                        <label for="nom">Nom :</label>
+                        <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($registerNomValue); ?>">
 
+                        <label for="prenom">Prénom :</label>
+                        <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($registerPrenomValue); ?>">
+
+                        <label for="email-signup">*Email :</label>
+                        <input type="email" id="email-signup" name="email" required value="<?php echo htmlspecialchars($registerEmailValue); ?>">
+                        <?php if ($registerEmailError) : ?>
+                            <p class="error-message"><?php echo $registerEmailError; ?></p>
+                        <?php endif; ?>
+
+                        <label for="motdepasse-signup">*Mot de passe :</label>
+                        <input type="password" id="motdepasse-signup" name="motdepasse" required value="<?php echo htmlspecialchars($registerPasswordValue); ?>">
+                        <input type="checkbox" id="showPasswordSignup" onclick="togglePasswordSignup()"> Afficher le mot de passe<br>
+                        <?php if ($registerPasswordError) : ?>
+                            <p class="error-message"><?php echo $registerPasswordError; ?></p>
+                        <?php endif; ?>
+
+                        <button type="submit" name="signup">S'inscrire</button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -139,10 +167,8 @@ if (isset($_POST['signup'])) {
     <footer style="position: fixed; bottom: 0">
         <p>&copy; 2024 Vidal et Fils</p>
     </footer>
-</body>
-</html>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
             var signupLink = document.getElementById("signup-link");
             var popup = document.getElementById("signup-popup");
             var close = document.getElementsByClassName("close")[0];
@@ -162,24 +188,26 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         });
-        
-    function togglePassword() {
-        var passwordField = document.getElementById("motdepasse");
-        var showPasswordCheckbox = document.getElementById("showPassword");
-        if (showPasswordCheckbox.checked) {
-            passwordField.type = "text";
-        } else {
-            passwordField.type = "password";
-        }
-    }
 
-    function togglePasswordSignup() {
-        var passwordField = document.getElementById("motdepasse-signup");
-        var showPasswordCheckbox = document.getElementById("showPasswordSignup");
-        if (showPasswordCheckbox.checked) {
-            passwordField.type = "text";
-        } else {
-            passwordField.type = "password";
+        function togglePassword() {
+            var passwordField = document.getElementById("motdepasse");
+            var showPasswordCheckbox = document.getElementById("showPassword");
+            if (showPasswordCheckbox.checked) {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
         }
-    }
-</script>
+
+        function togglePasswordSignup() {
+            var passwordField = document.getElementById("motdepasse-signup");
+            var showPasswordCheckbox = document.getElementById("showPasswordSignup");
+            if (showPasswordCheckbox.checked) {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+    </script>
+</body>
+</html>
