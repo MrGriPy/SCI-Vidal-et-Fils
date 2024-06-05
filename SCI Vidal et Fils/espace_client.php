@@ -60,7 +60,7 @@ $resultatReservations = $connexion->query($requeteReservations);
                 echo "Aucune réservation trouvée.<br><br>";
             }
             ?>
-            <a href="index.php" style="color: white; background-color: gray; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Se déconnecter</a>
+            <button onclick="window.location.href='index.php'">Se déconnecter</button>
         </section>
     </main>
     <footer style="margin-top: 191px;">
