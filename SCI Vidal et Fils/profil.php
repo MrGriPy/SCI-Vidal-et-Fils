@@ -116,7 +116,7 @@ if (isset($_POST['signup'])) {
 
                     <button type="submit" name="login">Se connecter</button>
                 </form>
-                <p>Pas de compte ? <a href="#" id="signup-link">Créer un compte</a></p>
+                <p>Pas de compte ? <a href="#" id="signup-link" style="text-decoration: underline">Créer un compte</a></p>
                 <?php if ($loginError) : ?>
                 <?php endif; ?>
                 <?php if (isset($updateSuccess)) : ?>
